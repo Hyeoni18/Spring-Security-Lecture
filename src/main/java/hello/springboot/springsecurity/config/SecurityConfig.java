@@ -1,6 +1,7 @@
 package hello.springboot.springsecurity.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,5 +20,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin();  //form로그인 사용할거야
         http.httpBasic();  //httpBasic도 쓸거야
+    }
+
+    //내가 원하는 유저정보를 여러 개 쓸 거야.
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("spring").password("{noop}boot").roles("USER")
+                .and()
+                .withUser("admin").password("{noop}123").roles("ADMIN");
     }
 }
