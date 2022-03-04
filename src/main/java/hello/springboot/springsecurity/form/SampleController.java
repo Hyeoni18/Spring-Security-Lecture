@@ -1,5 +1,7 @@
 package hello.springboot.springsecurity.form;
 
+import hello.springboot.springsecurity.account.AccountContext;
+import hello.springboot.springsecurity.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,8 @@ import java.security.Principal;
 public class SampleController {
 
     @Autowired SampleService sampleService;
+
+    @Autowired AccountRepository accountRepository;
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
@@ -31,6 +35,7 @@ public class SampleController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
         model.addAttribute("message", "Hello "+principal.getName());
+        AccountContext.setAccount(accountRepository.findByUsername(principal.getName())); //우리가 넣긴 했지만 SecurityContextHolder에는 인증된 객체서 알아서 들어감.
         sampleService.dashboard();
         return "dashboard"; //view name
     }
