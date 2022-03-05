@@ -2,12 +2,16 @@ package hello.springboot.springsecurity.form;
 
 import hello.springboot.springsecurity.account.AccountContext;
 import hello.springboot.springsecurity.account.AccountRepository;
+import hello.springboot.springsecurity.common.SecurityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.util.concurrent.Callable;
 
 @Controller
 public class SampleController {
@@ -50,6 +54,20 @@ public class SampleController {
     public String user(Model model, Principal principal) {
         model.addAttribute("message", "Hello User, "+principal.getName());
         return "user"; //view name
+    }
+
+    @GetMapping("/async-handler")
+    @ResponseBody
+    public Callable<String> asyncHandler() {
+        //Callable을 사용해서 return을 하면 Callable 안에 있는 call()을 처리하기 전에 리퀘스트를 처리하고 있던 쓰레드를 반환함. 릴리즈 하고, 그다음에 콜러블 안에서 하는 일이 완료됐을 때쯤 응답을 그제서야 보냄.
+        SecurityLogger.log("MVC");
+        return new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                SecurityLogger.log("Callable");
+                return "Async Handler";
+            }
+        };
     }
 
 }
