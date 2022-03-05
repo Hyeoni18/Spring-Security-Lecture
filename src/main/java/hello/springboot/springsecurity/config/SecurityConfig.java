@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .mvcMatchers("/","/info","/account/**").permitAll()
+                .mvcMatchers("/","/info","/account/**","/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 .mvcMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated()
@@ -50,7 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ;
         http.formLogin();
         http.httpBasic();
-        http.csrf().disable(); //이렇게 csrf를 사용하지 않겠다고 설정할 수도 있음.
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
