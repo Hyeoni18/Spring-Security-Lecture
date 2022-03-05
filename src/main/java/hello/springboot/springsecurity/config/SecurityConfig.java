@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 
@@ -51,6 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ;
         http.formLogin();
         http.httpBasic();
+
+        //우리가 사용하는 SecurityContextHolder는 Strategy를 설정할 수 있음. SecurityContext를 어떻게 유지할 것인가. 어디까지 공유할 것인가를 설정할 수 있음. 기본은 쓰레드 로컬임.
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); //해당 설정을 사용하면 현재 쓰레드에서 하위 쓰레드까지 공유 됨.
     }
 
 //    @Override
