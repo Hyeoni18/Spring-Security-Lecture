@@ -45,20 +45,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/","/info","/account/**").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 .mvcMatchers("/user").hasRole("USER")
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler())
-                //.accessDecisionManager(accessDecisionManager())
                 ;
         http.formLogin();
         http.httpBasic();
+        http.csrf().disable(); //이렇게 csrf를 사용하지 않겠다고 설정할 수도 있음.
 
-        //우리가 사용하는 SecurityContextHolder는 Strategy를 설정할 수 있음. SecurityContext를 어떻게 유지할 것인가. 어디까지 공유할 것인가를 설정할 수 있음. 기본은 쓰레드 로컬임.
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); //해당 설정을 사용하면 현재 쓰레드에서 하위 쓰레드까지 공유 됨.
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-//    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 }
