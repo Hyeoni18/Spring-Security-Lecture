@@ -28,6 +28,7 @@ public class AccountService implements UserDetailsService {
                 .username(account.getUsername())
                 .password(account.getPassword())
                 .roles(account.getRole())
+                //.roles(account.getRole(), "USER") 롤을 여러 개 관리하는 방법 중 하나
                 .build();
     }
 
