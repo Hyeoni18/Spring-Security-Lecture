@@ -48,7 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler())
                 ;
-        http.formLogin();
+        http.formLogin()
+                .usernameParameter("my-username")
+                .passwordParameter("my-password")
+        ;
         http.httpBasic();
 
         http.logout()
