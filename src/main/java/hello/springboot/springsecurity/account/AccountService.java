@@ -27,6 +27,7 @@ public class AccountService implements UserDetailsService {
         return User.builder()
                 .username(account.getUsername())
                 .password(account.getPassword())
+                //.authorities("ROLE_USER") // authorities를 쓰려면 ROLE_ prefix 필요.
                 .roles(account.getRole())
                 //.roles(account.getRole(), "USER") 롤을 여러 개 관리하는 방법 중 하나
                 .build();

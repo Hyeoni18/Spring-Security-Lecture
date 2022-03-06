@@ -51,8 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatcher("/**") //@Order 보다는 antMatcher을 사용해서 매칭이 되도록 하는게 좋음. 모든 요청을 처리할건데 그 중 mvcMatchers는 이런 권한을 가지고 접근을 해야 해. 그리고 폼 로그인하고 httpBasic을 지원하겠다.
                 .authorizeRequests()
                 .mvcMatchers("/","/info","/account/**","/signup").permitAll()
-                .mvcMatchers("/admin").hasRole("ADMIN")
-                .mvcMatchers("/user").hasRole("USER")
+                .mvcMatchers("/admin").hasAnyAuthority("ROLE_ADMIN") //hasAnyAuthority가 좀 더 제네릭함.
+                .mvcMatchers("/user").hasRole("USER") //hasRole은 hasAnyAuthority의 하위 개념. hasRole은 profix가 없어도 됨.
+                //.anyRequest().anonymous() // 익명사용자만 허용. 인증이 되면 접근할 수 없음.
+                //.anyRequest().rememberMe() //rememberMe 기능으로 인증을 한 사용자만 허용
+                //.anyRequest().fullyAuthenticated() // rememberMe로 인증이 된 사용자인 경우 다시 로그인을 요구. 위에선 rememberMe로 해도 괜찮았다가, 여기서 다시 요구하는거야. 그러니까 중요한 페이지에서 한 번 더 인증을 요구한다고 생각하면 됨.
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler())
                 ;
