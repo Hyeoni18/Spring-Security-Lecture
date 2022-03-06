@@ -35,6 +35,8 @@ import java.util.List;
 @Order(Ordered.LOWEST_PRECEDENCE - 100)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired AccountService accountService;
+
     public SecurityExpressionHandler expressionHandler() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -63,6 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll()
         ;
+
+        http.rememberMe()
+                //.rememberMeParameter("remember") //이렇게 설정하면 login.html name을 remember-me 가 아닌 remember라고 적을 수 있음.
+                //.tokenValiditySeconds() //쿠키 유지 시간, 기본값은 2주.
+                //.useSecureCookie(true) //https만 접근 가능하도록 하는거. https를 적용하면 true라고 설정하는게 좋음.
+                //.alwaysRemember(true) //우리가 form에서 파라미터를 보내지 않더라도 remember 하는거임. 기본값은 false. true하면 기본적으로 쿠키가 남게됨.
+                        .userDetailsService(accountService)
+                                .key("remember-me-sample");
+
         http.httpBasic();
 
         http.logout()
