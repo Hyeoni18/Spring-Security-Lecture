@@ -1,6 +1,7 @@
 package hello.springboot.springsecurity.config;
 
 import hello.springboot.springsecurity.account.AccountService;
+import hello.springboot.springsecurity.common.LoggerFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //필터를 삽입하는 방법 (어떤 필터 앞, 뒤, 해당 필터 위치에 삽입하거나)
+        http.addFilterBefore(new LoggerFilter(), WebAsyncManagerIntegrationFilter.class); //첫 번째 필터 앞에 넣는거야.
+
         http
                 .antMatcher("/**") //@Order 보다는 antMatcher을 사용해서 매칭이 되도록 하는게 좋음. 모든 요청을 처리할건데 그 중 mvcMatchers는 이런 권한을 가지고 접근을 해야 해. 그리고 폼 로그인하고 httpBasic을 지원하겠다.
                 .authorizeRequests()
