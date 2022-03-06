@@ -23,14 +23,8 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException(username);
         }
-        //Account를 UserDetails타입으로 바뀌기 위해 스프링 시큐리티가 제공하는 User.builder.
-        return User.builder()
-                .username(account.getUsername())
-                .password(account.getPassword())
-                //.authorities("ROLE_USER") // authorities를 쓰려면 ROLE_ prefix 필요.
-                .roles(account.getRole())
-                //.roles(account.getRole(), "USER") 롤을 여러 개 관리하는 방법 중 하나
-                .build();
+
+        return new UserAccount(account);
     }
 
     public Account createNew(Account account) {

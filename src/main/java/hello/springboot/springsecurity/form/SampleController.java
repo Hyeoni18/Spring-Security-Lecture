@@ -1,9 +1,13 @@
 package hello.springboot.springsecurity.form;
 
+import hello.springboot.springsecurity.account.Account;
 import hello.springboot.springsecurity.account.AccountContext;
 import hello.springboot.springsecurity.account.AccountRepository;
+import hello.springboot.springsecurity.account.UserAccount;
+import hello.springboot.springsecurity.common.CurrentUser;
 import hello.springboot.springsecurity.common.SecurityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +25,11 @@ public class SampleController {
     @Autowired AccountRepository accountRepository;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal) {
-        if(principal == null) {
+    public String index(Model model, @AuthenticationPrincipal UserAccount userAccount) { //@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account") Account account //Account로 받아올 수도 있음. 근데 너무 길어.
+        if(userAccount == null) {
             model.addAttribute("message", "Spring Security");
         } else {
-            model.addAttribute("message", "Hello, Welcome "+principal.getName());
+            model.addAttribute("message", "Hello, Welcome "+userAccount.getUsername());
         }
         return "index"; //view name
     }
@@ -37,9 +41,9 @@ public class SampleController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, Principal principal) {
-        model.addAttribute("message", "Hello "+principal.getName());
-        AccountContext.setAccount(accountRepository.findByUsername(principal.getName())); //우리가 넣긴 했지만 SecurityContextHolder에는 인증된 객체서 알아서 들어감.
+    public String dashboard(Model model, @CurrentUser Account account) {
+        model.addAttribute("message", "Hello "+account.getUsername());
+        AccountContext.setAccount(accountRepository.findByUsername(account.getUsername())); //우리가 넣긴 했지만 SecurityContextHolder에는 인증된 객체서 알아서 들어감.
         sampleService.dashboard();
         return "dashboard"; //view name
     }
