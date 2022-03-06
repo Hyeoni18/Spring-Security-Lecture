@@ -4,6 +4,7 @@ import hello.springboot.springsecurity.account.Account;
 import hello.springboot.springsecurity.account.AccountContext;
 import hello.springboot.springsecurity.account.AccountRepository;
 import hello.springboot.springsecurity.account.UserAccount;
+import hello.springboot.springsecurity.book.BookRepository;
 import hello.springboot.springsecurity.common.CurrentUser;
 import hello.springboot.springsecurity.common.SecurityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class SampleController {
     @Autowired SampleService sampleService;
 
     @Autowired AccountRepository accountRepository;
+
+    @Autowired BookRepository bookRepository;
 
     @GetMapping("/")
     public String index(Model model, @AuthenticationPrincipal UserAccount userAccount) { //@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account") Account account //Account로 받아올 수도 있음. 근데 너무 길어.
@@ -57,6 +60,7 @@ public class SampleController {
     @GetMapping("/user")
     public String user(Model model, Principal principal) {
         model.addAttribute("message", "Hello User, "+principal.getName());
+        model.addAttribute("books", bookRepository.findCurrentUserBooks());
         return "user"; //view name
     }
 
