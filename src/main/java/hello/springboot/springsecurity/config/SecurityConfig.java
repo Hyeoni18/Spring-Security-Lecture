@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .antMatcher("/**")
+                .antMatcher("/**") //@Order 보다는 antMatcher을 사용해서 매칭이 되도록 하는게 좋음. 모든 요청을 처리할건데 그 중 mvcMatchers는 이런 권한을 가지고 접근을 해야 해. 그리고 폼 로그인하고 httpBasic을 지원하겠다.
                 .authorizeRequests()
                 .mvcMatchers("/","/info","/account/**","/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
