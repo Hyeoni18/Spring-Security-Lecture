@@ -49,13 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expressionHandler(expressionHandler())
                 ;
         http.formLogin()
-                .usernameParameter("my-username")
-                .passwordParameter("my-password")
+                .loginPage("/login")
+                .permitAll()
         ;
         http.httpBasic();
 
         http.logout()
-                .logoutUrl("/logout") //로그아웃 url설정. 나중에 커스텀할 때 화면 만들고 변경하면 돼.
+  //              .logoutUrl("/logout") //로그아웃 url설정. 나중에 커스텀할 때 화면 만들고 변경하면 돼.
                 .logoutSuccessUrl("/") //기본은 /login
         //        .addLogoutHandler() //로그아웃할 때 부가적인 일을 추가할 수 있음.
         //        .logoutSuccessUrl() //별도로 구현해서 넣으면 돼.
